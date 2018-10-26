@@ -1,0 +1,44 @@
+digraph pipeline {
+	compound = true
+
+	node [fontname = "Helvetica", fontsize = 10, shape = "rectangle",
+	      style = "filled", fillcolor = "aliceblue", color = "gray40"]
+
+	edge [fontname = "Helvetica", fontsize = 8, color = "gray50", arrowsize = 0.5]
+
+	A [label = "26531POST", URL = "https://www.cycif.org/osd-exhibit"]
+	B [label = "1_raw\n(syn17011260)", URL = "https://www.synapse.org/#!Synapse:syn17011260"]
+	C [label = "2_stitched\n(syn17011265)",
+	   URL = "https://www.synapse.org/#!Synapse:syn17011265"]
+
+	subgraph clusterA {
+		label = "3_segmented (syn17011266)"
+		labeljust = "l"
+		URL="https://www.synapse.org/#!Synapse:syn17011266"
+		subgraph clusterA1 {
+			label = "RF\n(syn17011578)"
+			URL="https://www.synapse.org/#!Synapse:syn17011578"
+			D1 [label = "nucleiLabelRF.tif",
+			    URL = "https://www.synapse.org/#!Synapse:syn17011578"]
+			D2 [label = "segResultsRF.csv",
+			    URL = "https://www.synapse.org/#!Synapse:syn17011578"]
+		}
+		subgraph clusterA2 {
+			label = "UNet\n(syn17011584)"
+			URL="https://www.synapse.org/#!Synapse:syn17011584"
+			D3 [label = "nucleiLabelUNet.tif",
+			    URL="https://www.synapse.org/#!Synapse:syn17011584"]
+			D4 [label = "segResultsUNet.csv",
+			    URL="https://www.synapse.org/#!Synapse:syn17011584"]
+		}
+	}
+
+	E [label = "4_clustered", URL = "https://www.synapse.org/#!Synapse:syn17012622"]
+	
+	A -> B
+	B -> C [label = " ASHLAR", URL = "https://github.com/sorgerlab/ashlar"]
+	C -> D1 [label = " MatBots", URL = "https://hms-idac.github.io/MatBots/",
+		 lhead = clusterA1]
+	C -> D3 [lhead = clusterA2]
+	D2 -> E [label = " pamsig", URL = "https://github.com/datarail/pamsig"]
+}

@@ -9,34 +9,6 @@ library( tidyverse )
 library( DiagrammeR )
 ```
 
-```{r echo=FALSE}
-vURL <- c( "26531POST" = "https://www.cycif.org/osd-exhibit",
-          "1_raw\n(syn17011260)" = "https://www.synapse.org/#!Synapse:syn17011260",
-          "2_stitched\n(syn17011265)" = "https://www.synapse.org/#!Synapse:syn17011265",
-##          "RF\n(syn17011578)" = "https://www.synapse.org/#!Synapse:syn17011578",
-          "nucleiLabelRF.tif" = "https://www.synapse.org/#!Synapse:syn17011578",
-          "segResultsRF.csv" = "https://www.synapse.org/#!Synapse:syn17011578",
-          "UNet\n(syn17011584)" = "https://www.synapse.org/#!Synapse:syn17011584",
-          "Clustered\n(syn17012622)" = "https://www.synapse.org/#!Synapse:syn17012622" )
-
-c1 <- "RF (syn17011578)"
-
-ndf <- create_node_df( length(vURL), label = names(vURL),
-                      cluster = c(NA,NA,NA,c1,c1,NA,NA),
-                      URL = vURL, fixedsize = FALSE, shape = "rectangle",
-                      fontname = "Helvetica", fontsize = 10, color = "gray70",
-                      style = "filled", fillcolor="aliceblue" )
-
-edf <- create_edge_df( from = c(1,2,3,3,3,5),
-                         to = c(2,3,4,5,6,7),
-                      label = c(" "," ASHLAR"," MatBots"," "," "," pamsig"),
-                      labelURL = c(NA,"https://github.com/sorgerlab/ashlar",
-                                   "https://hms-idac.github.io/MatBots/", NA, NA,
-                                   "https://github.com/datarail/pamsig"),
-                      fontname = "Helvetica", fontsize = 8, color = "gray80",
-                      arrowsize = 0.5 )
-
-G <- create_graph( ndf, edf, attr_theme=NULL )
-render_graph( G, width=800, height=800 )
-
+```{r echo = FALSE}
+grViz( "csc.dot", height=600 )
 ```
