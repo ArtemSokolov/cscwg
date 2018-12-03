@@ -3,7 +3,7 @@
 .Rapp.history
 
 # Session Data files
-.RData
+*.RData
 
 # Example code in package build process
 *-Ex.R
@@ -37,3 +37,11 @@ rsconnect/
 
 # Emacs
 *~
+
+# Data
+*.csv
+*.csv.gz
+
+# Plots
+*.pdf
+*.png
