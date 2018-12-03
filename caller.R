@@ -32,9 +32,16 @@ main <- function()
         mutate( wcx = map2_dbl(In, Out, ~wilcox.test(.x,.y,"g")$p.value), Ave = map_dbl(In,mean) ) %>%
         mutate( Vote = 1 - wcx ) %>% select( -In, -Out, -wcx )
 
+    ## Plot the votes
+    v <- c(8, 10, 4, 2, 5, 6, 9, 11, 3, 12, 1, 7)
+    RP <- R %>% mutate_at( "Cluster", ~str_c("Cluster", as.character(.x)) ) %>% select( -Ave ) %>%
+        spread( Marker, Vote ) %>% as.data.frame() %>% column_to_rownames("Cluster") %>% as.matrix %>% round
+    pheatmap::pheatmap( RP[,v], legend=FALSE, cluster_cols=FALSE, cluster_rows=FALSE,
+                       filename="votes.png", width=7, height=3.5 )
+
     ## Map markers to cell types and tally the votes
     inner_join( R, M, by="Marker" ) %>% group_by(Class) %>% mutate( Vote = Vote / Norm ) %>%
         group_by( Cluster, Class ) %>% summarize( Votes = sum(Vote) ) %>% mutate( Votes = Votes / sum(Votes) ) %>%
-        ungroup
+        ungroup %>% spread( Class, Votes )
 }
 
