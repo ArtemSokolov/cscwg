@@ -40,9 +40,12 @@ mutate_probs <- function( .df, vals, mix )
 ## Plots values from a single cell against background distribution of each marker
 plotCell <- function( X, CL )
 {
+    CLn <- CL %>%
+        mutate( Value = ifelse(Value < -1, -1, Value) ) %>%
+        mutate( Value = ifelse(Value > 1, 1, Value) )
     ggplot( X, aes(x=Value) ) + theme_bw() + xlim( c(-1.1, 1.1) ) +
         geom_density() + facet_wrap( ~Marker, nrow=4 ) +
-        geom_vline( aes(xintercept=Value), data = CL, color="red" )
+        geom_vline( aes(xintercept=Value), data = CLn, color="red" )
 }
 
 main <- function()
@@ -86,6 +89,10 @@ main <- function()
     ## Compute the (unnormalized) posterior probability of for each cell/class combo
     R <- Y %>% group_by( CellID ) %>% summarize_at( c("Tumor","Immune","Stroma"), prod )
 
+    ## Match cell probabilities against their positions and save everything to a file
+    Xraw %>% select( CellID, Pos_X = CellPosition_X, Pos_Y = CellPosition_Y ) %>%
+        inner_join( R, by="CellID" ) %>% write_csv( "segResultsRF-calls.csv.gz" )
+    
     ## Identify the top 1000 cells in each class
     R1k <- R %>% gather( Class, Prob, -CellID ) %>% group_by( Class ) %>%
         top_n( 1000, Prob ) %>% ungroup()
