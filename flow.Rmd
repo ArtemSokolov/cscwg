@@ -1,8 +1,27 @@
 ---
-title: "Current Status of the Cell State Calling Pipeline"
+title: "Current State of the LSP Image Processing Pipeline"
 author: Artem Sokolov
-output: html_document	
+output:
+  html_document:
+    css: style.css
 ---
+
+<svg height="0px">
+ <defs>
+   <filter id="selective-shadow">
+     <feColorMatrix type="matrix" values="0 0 0 0 0 
+                                          0 0 0 0 0
+                                          0 0 0 0 0 
+                                          2 0 0 0 -1"/>
+     <feGaussianBlur stdDeviation="3"/>
+     <feOffset dy="2" dx="2"/>
+     <feMerge>
+       <feMergeNode/>
+       <feMergeNode in="SourceGraphic"/>
+     </feMerge>
+   </filter>
+ </defs>
+</svg>
 
 ```{r include = FALSE}
 library( tidyverse )
@@ -10,5 +29,5 @@ library( DiagrammeR )
 ```
 
 ```{r echo = FALSE}
-grViz( "csc.dot", height=600 )
+grViz( "csc.dot", height=600, width=800 )
 ```
